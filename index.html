@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Borroz FC 27 — 12 vs 12 Ultimate Match</title>
+  <style>
+    :root {
+      --bg: #050811;
+      --card: #0f172a;
+      --card-2: #090d16;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #22c55e;
+      --accent-2: #38bdf8;
+      --gold: #f59e0b;
+      --danger: #ef4444;
+      --border: rgba(255, 255, 255, 0.12);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: radial-gradient(circle at top, #0f1c3f 0%, var(--bg) 70%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: rgba(9, 13, 22, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      font-weight: 900;
+      font-size: 1.25rem;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .brand span { color: var(--accent); }
+    .brand small {
+      background: var(--accent);
+      color: #052e16;
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 800;
+    }
+
+    .tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .tab-btn {
+      background: var(--card); color: var(--text); border: 1px solid var(--border);
+      padding: 8px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.85rem; transition: all 0.2s;
+    }
+    .tab-btn:hover { border-color: var(--accent); }
+    .tab-btn.active { background: var(--accent); color: #052e16; border-color: var(--accent); }
+
+    .user-hud { display: flex; align-items: center; gap: 12px; }
+
+    .coin-badge {
+      background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fbbf24; padding: 6px 12px; border-radius: 999px; font-weight: 800; font-size: 0.9rem;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    .profile-pill {
+      display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border);
+      padding: 4px 12px 4px 6px; border-radius: 999px; cursor: pointer;
+    }
+    .profile-pill span { font-weight: 700; font-size: 0.85rem; }
+
+    main { flex: 1; max-width: 1040px; width: 100%; margin: 20px auto; padding: 0 16px; }
+
+    .panel {
+      display: none; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 24px; animation: fadeIn 0.25s ease;
+    }
+    .panel.active { display: block; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    .hero {
+      text-align: center; padding: 32px 16px; background: linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(56, 189, 248, 0.08));
+      border: 1px solid var(--border); border-radius: 14px; margin-bottom: 22px;
+    }
+    .hero h1 { font-size: 2.4rem; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .hero h1 span { color: var(--accent); }
+    .hero p { color: var(--muted); max-width: 600px; margin: 0 auto 20px; }
+
+    .mode-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+    .mode-card {
+      background: var(--card-2); border: 1px solid var(--border); border-radius: 12px; padding: 18px;
+      cursor: pointer; transition: transform 0.2s, border-color 0.2s; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .mode-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+    .mode-card h3 { font-size: 1.1rem; margin-bottom: 6px; }
+    .mode-card p { font-size: 0.85rem; color: var(--muted); margin-bottom: 14px; }
+
+    .btn {
+      background: var(--accent); color: #052e16; border: none; padding: 10px 18px; border-radius: 8px;
+      font-weight: 800; font-size: 0.9rem; cursor: pointer; transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn:hover { opacity: 0.92; }
+    .btn:active { transform: scale(0.98); }
+    .btn.blue { background: var(--accent-2); color: #082f49; }
+    .btn.gold { background: var(--gold); color: #271500; }
+    .btn.danger { background: var(--danger); color: #fff; }
+    .btn.secondary { background: var(--card-2); color: var(--text); border: 1px solid var(--border); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .match-hud {
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;
+      background: var(--card-2); border: 1px solid var(--border); padding: 12px 18px; border-radius: 12px; margin-bottom: 14px; gap: 10px;
+    }
+    .scoreboard { display: flex; align-items: center; gap: 14px; font-weight: 900; font-size: 1.2rem; }
+    .score-box { background: var(--accent); color: #052e16; padding: 3px 12px; border-radius: 6px; }
+
+    #pitch-canvas {
+      display: block; width: 100%; max-width: 960px; height: 480px; margin: 0 auto;
+      background: #14532d; border: 4px solid #f8fafc; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    }
+
+    .controls-guide { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 14px; font-size: 0.85rem; color: var(--muted); }
+    .key-tag { background: var(--card-2); border: 1px solid var(--border); color: var(--text); padding: 3px 8px; border-radius: 5px; font-weight: 800; }
+
+    .touch-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 12px; }
+    .dpad-fc { display: grid; grid-template-columns: repeat(3, 48px); gap: 6px; }
+    .dpad-fc button, .action-btns button { height: 46px; border-radius: 10px; border: 1px solid var(--border); background: var(--card-2); color: var(--text); font-weight: 800; cursor: pointer; user-select: none; }
+    .action-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .action-btns button { font-size: 0.78rem; padding: 0 10px; }
+
+    #overlay-screen {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 8, 17, 0.96); z-index: 9999;
+      display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px;
+    }
+    .overlay-icon { font-size: 4.5rem; margin-bottom: 16px; animation: bounce 1.5s infinite ease-in-out; }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+    .story-box {
+      background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid var(--accent); border-radius: 14px; padding: 22px; margin-bottom: 20px;
+    }
+    .story-box h3 { color: var(--accent); margin-bottom: 8px; font-size: 1.3rem; }
+    .story-box p { color: var(--muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 16px; }
+
+    .customizer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px; }
+    .custom-group { background: var(--card-2); padding: 14px; border-radius: 12px; border: 1px solid var(--border); }
+    .custom-group label { display: block; font-size: 0.82rem; color: var(--muted); margin-bottom: 6px; font-weight: 700; }
+    .custom-group select, .custom-group input { width: 100%; background: var(--bg); border: 1px solid var(--border); color: #fff; padding: 10px; border-radius: 8px; font-weight: 700; }
+
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+    .fc-card {
+      border-radius: 12px; padding: 14px; position: relative; border: 2px solid rgba(255,255,255,0.15);
+      display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s;
+      background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
+    }
+    .fc-card:hover { transform: translateY(-3px); }
+    .fc-ovr { font-size: 1.4rem; font-weight: 900; }
+    .fc-name { font-weight: 900; font-size: 0.9rem; text-align: center; text-transform: uppercase; margin: 8px 0; }
+    .fc-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 0.72rem; font-weight: 700; margin-bottom: 10px; }
+
+    #toast {
+      position: fixed; bottom: 22px; right: 22px; background: #0f172a; border: 1px solid var(--accent); color: var(--text);
+      padding: 12px 18px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      transform: translateY(120px); opacity: 0; transition: all 0.3s; z-index: 999;
+    }
+    #toast.show { transform: translateY(0); opacity: 1; }
+
+    footer {
+      text-align: center; padding: 18px; color: var(--muted); font-size: 0.85rem;
+      display: flex; flex-direction: column; gap: 4px; align-items: center; border-top: 1px solid var(--border); margin-top: 30px;
+    }
+    footer a { color: var(--accent-2); text-decoration: none; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <!-- TELA DE CUTSCENE (AVIÃO) -->
+  <div id="overlay-screen">
+    <div class="overlay-icon" id="overlay-emoji">✈️</div>
+    <h2 id="overlay-title" style="color:#fff; font-size:1.8rem; margin-bottom:10px;">Viagem Internacional</h2>
+    <p id="overlay-desc" style="color:var(--muted); max-width:450px; font-size:1rem; line-height:1.5;"></p>
+    <button class="btn gold" style="margin-top:20px;" onclick="closeOverlay()">Continuar</button>
+  </div>
+
+  <header>
+    <div class="brand" onclick="switchTab('home')">BORROZ <span>FC</span> <small>27</small></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="home">Início</button>
+      <button class="tab-btn" data-tab="match">Jogar Partida</button>
+      <button class="tab-btn" data-tab="squad">Mercado de Craques</button>
+      <button class="tab-btn" data-tab="career">Modo Carreira (História)</button>
+      <button class="tab-btn" data-tab="profile">Customização & Perfil</button>
+    </div>
+
+    <div class="user-hud">
+      <div class="coin-badge">🪙 <span id="hud-coins">800</span></div>
+      <div class="profile-pill" onclick="switchTab('profile')">
+        <div class="avatar-circle" id="hud-avatar">⚽</div>
+        <span id="hud-name">Borroz Jr</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- TELA INICIAL -->
+    <section id="home" class="panel active">
+      <div class="hero">
+        <h1>BORROZ <span>FC 27</span></h1>
+        <p>Partida Épica com **12 jogadores de cada lado** em campo (24 atletas correndo ao mesmo tempo), câmera dinâmica de TV, IA de pedidos de passe, arbitragem e Modo Carreira!</p>
+        <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+          <button class="btn" onclick="startQuickMatch()">⚽ Partida Rápida (12 vs 12)</button>
+          <button class="btn blue" onclick="switchTab('career')">🏆 Modo Carreira (História)</button>
+        </div>
+      </div>
+
+      <div class="mode-grid">
+        <div class="mode-card" onclick="switchTab('career')">
+          <div>
+            <h3>🔥 Modo Carreira & História</h3>
+            <p>Comece nas peladas de terra da Favela, assine com o clube profissional e viaje de avião para a Europa.</p>
+          </div>
+          <button class="btn gold">Jogar História</button>
+        </div>
+
+        <div class="mode-card" onclick="switchTab('squad')">
+          <div>
+            <h3>🛒 Mercado de Craques</h3>
+            <p>Contrate os melhores jogadores do mundo para o seu time titular.</p>
+          </div>
+          <button class="btn blue">Ver Mercado</button>
+        </div>
+
+        <div class="mode-card" onclick="switchTab('profile')">
+          <div>
+            <h3>👕 Customização Avançada (FC 27)</h3>
+            <p>Personalize chuteiras, uniformes autênticos, número da camisa e rosto realista.</p>
+          </div>
+          <button class="btn secondary">Customizar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PARTIDA 2D COM 12 JOGADORES DE CADA LADO -->
+    <section id="match" class="panel">
+      <div class="match-hud">
+        <div class="scoreboard">
+          <span id="match-mode-label" style="font-size:0.8rem; color:var(--accent-2);">12 vs 12 EM CAMPO</span>
+          <span id="team-home-name">MEU TIME</span>
+          <span class="score-box"><span id="score-home">0</span> - <span id="score-away">0</span></span>
+          <span id="team-away-name">RIVAL FC</span>
+        </div>
+        <div style="font-weight:900; font-size:1.1rem; color:var(--gold);">⏱️ <span id="match-clock">00'</span></div>
+        <button class="btn secondary" onclick="resetMatch()">Reiniciar</button>
+      </div>
+
+      <canvas id="pitch-canvas" width="960" height="480"></canvas>
+
+      <div class="controls-guide">
+        <span><span class="key-tag">WASD / Setas</span> Mover Atleta</span>
+        <span><span class="key-tag">ESPAÇO / J</span> Tocar / Pedir Toque (Amigos pedem!)</span>
+        <span><span class="key-tag">K / ENTER (Segure)</span> Chute com Potência (FC 27 Style)</span>
+        <span><span class="key-tag">L</span> Carrinho / Desarme</span>
+      </div>
+
+      <div class="touch-controls">
+        <div class="dpad-fc">
+          <div></div>
+          <button onmousedown="keys['ArrowUp']=true" onmouseup="keys['ArrowUp']=false" ontouchstart="keys['ArrowUp']=true" ontouchend="keys['ArrowUp']=false">▲</button>
+          <div></div>
+          <button onmousedown="keys['ArrowLeft']=true" onmouseup="keys['ArrowLeft']=false" ontouchstart="keys['ArrowLeft']=true" ontouchend="keys['ArrowLeft']=false">◀</button>
+          <button onmousedown="keys['ArrowDown']=true" onmouseup="keys['ArrowDown']=false" ontouchstart="keys['ArrowDown']=true" ontouchend="keys['ArrowDown']=false">▼</button>
+          <button onmousedown="keys['ArrowRight']=true" onmouseup="keys['ArrowRight']=false" ontouchstart="keys['ArrowRight']=true" ontouchend="keys['ArrowRight']=false">▶</button>
+        </div>
+
+        <div class="action-btns">
+          <button class="btn blue" onclick="triggerPassOrSwitch()">PASSAR / PEDIR</button>
+          <button class="btn danger" onmousedown="isChargingShot=true" onmouseup="releaseShot()" ontouchstart="isChargingShot=true" ontouchend="releaseShot()">CHUTAR</button>
+          <button class="btn gold" onclick="triggerTackle()">CARRINHO</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- MERCADO DE CRAQUES -->
+    <section id="squad" class="panel">
+      <div class="squad-header">
+        <div>
+          <h2>Mercado de Transferências</h2>
+          <p style="color:var(--muted); font-size:0.88rem;">Contrate craques para elevar o nível do seu time em campo.</p>
+        </div>
+        <div class="ovr-badge">OVR DO TIME: <span id="team-ovr-display">78</span></div>
+      </div>
+      <h3 style="margin-bottom:10px; color:var(--accent);">⭐ Seu Elenco Titular (12 em Campo)</h3>
+      <div class="cards-grid" id="active-squad-grid" style="margin-bottom:26px;"></div>
+      <h3 style="margin-bottom:10px; color:var(--gold);">🛒 Mercado Global</h3>
+      <div class="cards-grid" id="market-grid"></div>
+    </section>
+
+    <!-- MODO CARREIRA & HISTÓRIA -->
+    <section id="career" class="panel">
+      <div class="story-box">
+        <h3 id="story-title">📖 Capítulo 1: O Sonho na Várzea (Favela)</h3>
+        <p id="story-desc">Você começa jogando descalço nos campinhos de terra da favela. Vença 3 partidas para assinar seu contrato profissional e pegar o avião para a Europa!</p>
+        <button class="btn gold" onclick="startCareerMatch()">⚽ Jogar Partida da Carreira</button>
+      </div>
+
+      <div class="career-stats" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:14px;">
+        <div style="background:var(--card-2); padding:16px; border-radius:12px; border:1px solid var(--border); text-align:center;">
+          <small style="color:var(--muted);">Fase da Carreira</small>
+          <strong id="career-phase" style="font-size:1.15rem; color:var(--accent);">Pelada da Favela</strong>
+        </div>
+        <div style="background:var(--card-2); padding:16px; border-radius:12px; border:1px solid var(--border); text-align:center;">
+          <small style="color:var(--muted);">Vitórias na Temporada</small>
+          <strong id="career-wins" style="font-size:1.3rem; color:var(--accent-2);">0 / 3</strong>
+        </div>
+        <div style="background:var(--card-2); padding:16px; border-radius:12px; border:1px solid var(--border); text-align:center;">
+          <small style="color:var(--muted);">Clube Atual</small>
+          <strong id="career-club" style="font-size:1.15rem; color:var(--gold);">Terrão FC</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- CUSTOMIZAÇÃO & PERFIL -->
+    <section id="profile" class="panel">
+      <div class="squad-header">
+        <h2>👕 Customização Realista (FC 27 Style)</h2>
+        <p style="color:var(--muted); font-size:0.88rem;">Configure seu uniforme autêntico, chuteiras, número e aparência.</p>
+      </div>
+
+      <div class="customizer-grid">
+        <div class="custom-group">
+          <label>Nome do Jogador</label>
+          <input type="text" id="player-name-input" maxlength="16" value="Borroz Jr" />
+        </div>
+        <div class="custom-group">
+          <label>Posição Principal</label>
+          <select id="player-pos-select">
+            <option value="ATA">Atacante (Artilheiro)</option>
+            <option value="MEI">Meio-Campista (Maestro)</option>
+            <option value="ZAG">Zagueiro (Xerife)</option>
+          </select>
+        </div>
+        <div class="custom-group">
+          <label>Estilo do Rosto / Cabelo</label>
+          <select id="player-avatar-select">
+            <option value="👦🏽">Moreno Estiloso</option>
+            <option value="👱🏼‍♂️">Loiro Raiz</option>
+            <option value="🧑🏽‍🦱">Cacheado</option>
+            <option value="👑">Coroa de Ouro</option>
+            <option value="⚡">Moicano Elétrico</option>
+          </select>
+        </div>
+        <div class="custom-group">
+          <label>Cor Oficial da Camisa (Clube)</label>
+          <select id="player-color-select">
+            <option value="#2563eb">Azul Tradicional</option>
+            <option value="#22c55e">Verde Gramado</option>
+            <option value="#f59e0b">Amarelo Ouro</option>
+            <option value="#dc2626">Vermelho Escarlate</option>
+            <option value="#1e1b4b">Azul Noite</option>
+          </select>
+        </div>
+        <div class="custom-group">
+          <label>Estilo da Chuteira (FC 27)</label>
+          <select id="boot-color-select">
+            <option value="#fbbf24">Chuteira Dourada (Lenda)</option>
+            <option value="#ef4444">Chuteira Vermelha Fogo</option>
+            <option value="#ffffff">Chuteira Branca Clássica</option>
+            <option value="#38bdf8">Chuteira Azul Elétrica</option>
+          </select>
+        </div>
+        <div class="custom-group">
+          <label>Número da Camisa</label>
+          <input type="number" id="player-number-input" min="1" max="99" value="10" />
+        </div>
+      </div>
+
+      <button class="btn" onclick="savePlayerCustomization()">Salvar Customização do Craque</button>
+    </section>
+  </main>
+
+  <footer>
+    <div>Borroz FC 27 — 12 jogadores de cada lado (24 em campo), câmera dinâmica e Modo Carreira.</div>
+    <div>Criador: <a href="https://instagram.com/drt__013" target="_blank">@drt__013</a></div>
+  </footer>
+
+  <div id="toast">Notificação</div>
+
+  <script>
+    const ALL_PLAYERS = [
+      { id: "p1", name: "Borroz Jr (Você)", pos: "ATA", ovr: 80, pac: 85, sho: 82, pas: 78, face: "👦🏽", price: 0, tier: "gold-rare", shirt: "#2563eb" },
+      { id: "p2", name: "D. Souza", pos: "MEI", ovr: 77, pac: 76, sho: 73, pas: 80, face: "🧑🏻", price: 0, tier: "gold-rare", shirt: "#2563eb" },
+      { id: "p3", name: "C. Lima", pos: "ZAG", ovr: 76, pac: 74, sho: 66, pas: 72, face: "🧔🏻", price: 0, tier: "gold-rare", shirt: "#2563eb" },
+      { id: "p4", name: "M. Silva", pos: "MEI", ovr: 78, pac: 77, sho: 75, pas: 82, face: "🧑🏾", price: 0, tier: "gold-rare", shirt: "#2563eb" },
+      { id: "p5", name: "R. Oliveira", pos: "ZAG", ovr: 77, pac: 75, sho: 68, pas: 74, face: "🧑🏻‍🦰", price: 0, tier: "gold-rare", shirt: "#2563eb" },
+      { id: "p6", name: "Endrick", pos: "ATA", ovr: 85, pac: 90, sho: 86, pas: 77, face: "👦🏽", price: 450, tier: "gold-rare", shirt: "#2563eb" },
+      { id: "p7", name: "Rodrygo", pos: "PD", ovr: 87, pac: 91, sho: 85, pas: 84, face: "🧑🏽", price: 700, tier: "gold-rare", shirt: "#2563eb" },
+      { id: "p8", name: "Neymar Jr", pos: "MEI", ovr: 90, pac: 88, sho: 87, pas: 93, face: "💇🏽‍♂️", price: 1100, tier: "toty-card", shirt: "#2563eb" },
+      { id: "p9", name: "Bellingham", pos: "MC", ovr: 91, pac: 86, sho: 89, pas: 91, face: "🧑🏽‍🦱", price: 1400, tier: "toty-card", shirt: "#2563eb" },
+      { id: "p10", name: "Haaland", pos: "ATA", ovr: 92, pac: 90, sho: 96, pas: 76, face: "👱🏼‍♂️", price: 1700, tier: "toty-card", shirt: "#2563eb" },
+      { id: "p11", name: "Vini Jr", pos: "PE", ovr: 93, pac: 98, sho: 90, pas: 87, face: "🕺🏾", price: 2200, tier: "toty-card", shirt: "#2563eb" },
+      { id: "p12", name: "K. Mbappé", pos: "ATA", ovr: 95, pac: 99, sho: 94, pas: 86, face: "🐢", price: 2700, tier: "toty-card", shirt: "#2563eb" },
+      { id: "p13", name: "L. Messi", pos: "PD", ovr: 96, pac: 89, sho: 95, pas: 98, face: "🐐", price: 3200, tier: "icon-card", shirt: "#2563eb" },
+      { id: "p14", name: "C. Ronaldo", pos: "ATA", ovr: 96, pac: 91, sho: 98, pas: 86, face: "👑", price: 3200, tier: "icon-card", shirt: "#2563eb" },
+      { id: "p15", name: "Pelé (ICON)", pos: "ATA", ovr: 99, pac: 98, sho: 99, pas: 98, face: "🏆", price: 5500, tier: "icon-card", shirt: "#2563eb" }
+    ];
+
+    let state = JSON.parse(localStorage.getItem("borroz_fc_27_save")) || {
+      coins: 800,
+      username: "Borroz Jr",
+      pos: "ATA",
+      avatar: "👦🏽",
+      teamColor: "#2563eb",
+      bootColor: "#fbbf24",
+      playerNum: 10,
+      ownedPlayers: ["p1", "p2", "p3", "p4", "p5"],
+      activeSquad: ["p1", "p2", "p3", "p4", "p5"],
+      career: { phase: 0, wins: 0, club: "Terrão FC (Favela)" }
+    };
+
+    function saveState() {
+      localStorage.setItem("borroz_fc_27_save", JSON.stringify(state));
+      updateHUD();
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 3000);
+    }
+
+    function updateHUD() {
+      document.getElementById("hud-coins").textContent = state.coins;
+      document.getElementById("hud-avatar").textContent = state.avatar;
+      document.getElementById("hud-name").textContent = state.username;
+      document.getElementById("team-ovr-display").textContent = getTeamOVR();
+      document.getElementById("team-home-name").textContent = state.username.toUpperCase();
+      
+      document.getElementById("player-name-input").value = state.username;
+      document.getElementById("player-pos-select").value = state.pos;
+      document.getElementById("player-avatar-select").value = state.avatar;
+      document.getElementById("player-color-select").value = state.teamColor;
+      document.getElementById("boot-color-select").value = state.bootColor;
+      document.getElementById("player-number-input").value = state.playerNum;
+
+      const mainPlayer = ALL_PLAYERS.find(p => p.id === "p1");
+      if (mainPlayer) {
+        mainPlayer.name = state.username + " (Você)";
+        mainPlayer.pos = state.pos;
+        mainPlayer.face = state.avatar;
+        mainPlayer.shirt = state.teamColor;
+      }
+
+      renderSquadAndMarket();
+      renderCareerStory();
+    }
+
+    function getTeamOVR() {
+      const players = state.activeSquad.map(id => ALL_PLAYERS.find(p => p.id === id)).filter(Boolean);
+      if (players.length === 0) return 75;
+      const avg = players.reduce((acc, p) => acc + p.ovr, 0) / players.length;
+      return Math.round(avg);
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.tab === tabId));
+      document.querySelectorAll(".panel").forEach(p => p.classList.toggle("active", p.id === tabId));
+      matchRunning = (tabId === "match");
+    }
+
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+    });
+
+    function savePlayerCustomization() {
+      state.username = document.getElementById("player-name-input").value.trim() || "Borroz Jr";
+      state.pos = document.getElementById("player-pos-select").value;
+      state.avatar = document.getElementById("player-avatar-select").value;
+      state.teamColor = document.getElementById("player-color-select").value;
+      state.bootColor = document.getElementById("boot-color-select").value;
+      state.playerNum = parseInt(document.getElementById("player-number-input").value) || 10;
+      saveState();
+      showToast("✅ Customização salva com sucesso!");
+    }
+
+    function renderSquadAndMarket() {
+      const activeGrid = document.getElementById("active-squad-grid");
+      const marketGrid = document.getElementById("market-grid");
+      activeGrid.innerHTML = "";
+      marketGrid.innerHTML = "";
+
+      ALL_PLAYERS.forEach(p => {
+        const isOwned = state.ownedPlayers.includes(p.id);
+        const isActive = state.activeSquad.includes(p.id);
+
+        const cardHTML = `
+          <div class="fc-card">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+              <div class="fc-ovr">${p.ovr}</div>
+              <div style="font-size:0.75rem; font-weight:800; color:var(--accent);">${isActive ? "✅ TITULAR" : ""}</div>
+            </div>
+            <div style="font-size:2.2rem; text-align:center; margin:6px 0;">${p.face}</div>
+            <div class="fc-name">${p.name}</div>
+            <div class="fc-stats">
+              <span>VEL ${p.pac}</span><span>CHU ${p.sho}</span>
+              <span>PAS ${p.pas}</span><span>OVR ${p.ovr}</span>
+            </div>
+            ${
+              isActive
+                ? `<button class="btn secondary" disabled>Titular (12 em Campo)</button>`
+                : isOwned
+                ? `<button class="btn blue" onclick="putInSquad('${p.id}')">Escalar Titular</button>`
+                : `<button class="btn gold" onclick="buyPlayer('${p.id}')">🪙 ${p.price}</button>`
+            }
+          </div>
+        `;
+        if (isActive) activeGrid.innerHTML += cardHTML;
+        else marketGrid.innerHTML += cardHTML;
+      });
+    }
+
+    function buyPlayer(id) {
+      const player = ALL_PLAYERS.find(p => p.id === id);
+      if (state.coins < player.price) {
+        showToast("❌ Moedas insuficientes!");
+        return;
+      }
+      state.coins -= player.price;
+      state.ownedPlayers.push(id);
+      putInSquad(id, true);
+      showToast(`🎉 Contratou ${player.name}!`);
+    }
+
+    function putInSquad(id, silent = false) {
+      if (state.activeSquad.includes(id)) return;
+      if (state.activeSquad.length >= 5) state.activeSquad.pop();
+      state.activeSquad.push(id);
+      saveState();
+      if (!silent) showToast("⚽ Titular escalado!");
+    }
+
+    const PHASES = [
+      { name: "Pelada da Favela", desc: "Campinhos de terra batida. Vença 3 partidas para chamar a atenção de olheiros profissionais!", targetWins: 3 },
+      { name: "Base do Clube Profissional", desc: "Série B nacional. Jogue bem e prepare as malas para voar rumo à Europa.", targetWins: 6 },
+      { name: "Futebol Europeu (Elite)", desc: "Champions League e grandes craques mundiais no topo do futebol.", targetWins: 10 }
+    ];
+
+    function renderCareerStory() {
+      const phaseObj = PHASES[state.career.phase] || PHASES[2];
+      document.getElementById("career-phase").textContent = phaseObj.name;
+      document.getElementById("career-wins").textContent = `${state.career.wins} / ${phaseObj.targetWins}`;
+      document.getElementById("career-club").textContent = state.career.club;
+      document.getElementById("story-title").textContent = `📖 Fase: ${phaseObj.name}`;
+      document.getElementById("story-desc").textContent = phaseObj.desc;
+    }
+
+    function triggerOverlay(emoji, title, desc) {
+      document.getElementById("overlay-emoji").textContent = emoji;
+      document.getElementById("overlay-title").textContent = title;
+      document.getElementById("overlay-desc").textContent = desc;
+      document.getElementById("overlay-screen").style.display = "flex";
+    }
+
+    function closeOverlay() {
+      document.getElementById("overlay-screen").style.display = "none";
+    }
+
+    // ENGINE DO JOGO 2D COM 12 JOGADORES DE CADA LADO
+    const canvas = document.getElementById("pitch-canvas");
+    const ctx = canvas.getContext("2d");
+
+    let matchRunning = false;
+    let matchEnded = false;
+    let matchSeconds = 0;
+    let scoreHome = 0, scoreAway = 0;
+    let shotPower = 0;
+    let isChargingShot = false;
+    let goalBannerTimer = 0;
+    let goalBannerText = "";
+    let matchState = "PLAYING";
+
+    const PITCH_WIDTH = 1600; // Campo ultra longo para 12 vs 12
+    const PITCH_HEIGHT = 520;
+    let cameraX = 0;
+
+    const keys = {};
+    window.addEventListener("keydown", e => {
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space", "KeyW", "KeyA", "KeyS", "KeyD", "KeyK", "KeyL"].includes(e.code)) {
+        if (document.getElementById("match").classList.contains("active")) e.preventDefault();
+      }
+      keys[e.code] = true;
+      if (!matchRunning || matchEnded) return;
+      if (e.code === "Space" || e.code === "KeyJ") triggerPassOrSwitch();
+      if (e.code === "KeyK" || e.code === "Enter") isChargingShot = true;
+      if (e.code === "KeyL") triggerTackle();
+    });
+
+    window.addEventListener("keyup", e => {
+      keys[e.code] = false;
+      if ((e.code === "KeyK" || e.code === "Enter") && isChargingShot) releaseShot();
+    });
+
+    function releaseShot() {
+      isChargingShot = false;
+      triggerShoot(Math.max(0.4, Math.min(1, shotPower)));
+      shotPower = 0;
+    }
+
+    let ball = { x: 800, y: 260, vx: 0, vy: 0, owner: null };
+    let homePlayers = [];
+    let awayPlayers = [];
+    let homeGK = { x: 40, y: 260 };
+    let awayGK = { x: 1560, y: 260 };
+    let referee = { x: 800, y: 200 };
+    let linesmanTop = { x: 800, y: 18 };
+    let linesmanBot = { x: 800, y: 502 };
+    let coach = { x: 200, y: 35 };
+    let controlledIdx = 0;
+
+    function startQuickMatch() {
+      switchTab("match");
+      resetMatch();
+    }
+
+    function startCareerMatch() {
+      switchTab("match");
+      resetMatch();
+    }
+
+    function resetMatch() {
+      scoreHome = 0; scoreAway = 0; matchSeconds = 0;
+      matchEnded = false; matchRunning = true; matchState = "PLAYING";
+      document.getElementById("score-home").textContent = "0";
+      document.getElementById("score-away").textContent = "0";
+      document.getElementById("match-clock").textContent = "00'";
+      setupFormations();
+    }
+
+    function setupFormations() {
+      const squadCards = state.activeSquad.map(id => ALL_PLAYERS.find(p => p.id === id)).filter(Boolean);
+      
+      // EXATAMENTE 12 JOGADORES NO TIME DA CASA (1 Goleiro + 11 de Linha)
+      homePlayers = [
+        { x: 750, y: 260, homeX: 720, homeY: 260, data: squadCards[0] || ALL_PLAYERS[0], callingPass: false, stun: 0 },
+        { x: 600, y: 130, homeX: 620, homeY: 120, data: squadCards[1] || ALL_PLAYERS[1], callingPass: false, stun: 0 },
+        { x: 600, y: 390, homeX: 620, homeY: 400, data: squadCards[2] || ALL_PLAYERS[2], callingPass: false, stun: 0 },
+        { x: 450, y: 90,  homeX: 470, homeY: 85,  data: squadCards[3] || ALL_PLAYERS[3], callingPass: false, stun: 0 },
+        { x: 450, y: 430, homeX: 470, homeY: 435, data: squadCards[4] || ALL_PLAYERS[4], callingPass: false, stun: 0 },
+        { x: 320, y: 160, homeX: 340, homeY: 150, data: squadCards[5] || ALL_PLAYERS[5] || ALL_PLAYERS[0], callingPass: false, stun: 0 },
+        { x: 320, y: 360, homeX: 340, homeY: 370, data: squadCards[0], callingPass: false, stun: 0 },
+        { x: 200, y: 120, homeX: 220, homeY: 110, data: squadCards[1], callingPass: false, stun: 0 },
+        { x: 200, y: 400, homeX: 220, homeY: 410, data: squadCards[2], callingPass: false, stun: 0 },
+        { x: 120, y: 200, homeX: 140, homeY: 190, data: squadCards[3], callingPass: false, stun: 0 },
+        { x: 120, y: 320, homeX: 140, homeY: 330, data: squadCards[4], callingPass: false, stun: 0 }
+      ];
+
+      // EXATAMENTE 12 JOGADORES NO TIME RIVAL (1 Goleiro + 11 de Linha)
+      awayPlayers = [
+        { x: 850, y: 260, homeX: 880, homeY: 260, name: "Rival 11", hair: "#111", shirt: "#ef4444", stun: 0 },
+        { x: 1000, y: 130, homeX: 980, homeY: 120, name: "Rival 10", hair: "#b45309", shirt: "#ef4444", stun: 0 },
+        { x: 1000, y: 390, homeX: 980, homeY: 400, name: "Rival 9", hair: "#171717", shirt: "#ef4444", stun: 0 },
+        { x: 1150, y: 90,  homeX: 1130, homeY: 85, name: "Rival 8", hair: "#57534e", shirt: "#ef4444", stun: 0 },
+        { x: 1150, y: 430, homeX: 1130, homeY: 435, name: "Rival 7", hair: "#d97706", shirt: "#ef4444", stun: 0 },
+        { x: 1280, y: 160, homeX: 1260, homeY: 150, name: "Rival 6", hair: "#262626", shirt: "#ef4444", stun: 0 },
+        { x: 1280, y: 360, homeX: 1260, homeY: 370, name: "Rival 5", hair: "#333", shirt: "#ef4444", stun: 0 },
+        { x: 1400, y: 120, homeX: 1380, homeY: 110, name: "Rival 4", hair: "#444", shirt: "#ef4444", stun: 0 },
+        { x: 1400, y: 400, homeX: 1380, homeY: 410, name: "Rival 3", hair: "#555", shirt: "#ef4444", stun: 0 },
+        { x: 1480, y: 200, homeX: 1460, homeY: 190, name: "Rival 2", hair: "#666", shirt: "#ef4444", stun: 0 },
+        { x: 1480, y: 320, homeX: 1460, homeY: 330, name: "Rival 1", hair: "#777", shirt: "#ef4444", stun: 0 }
+      ];
+
+      homeGK = { x: 35, y: 260 };
+      awayGK = { x: 1565, y: 260 };
+      controlledIdx = 0;
+      ball = { x: 800, y: 260, vx: 0, vy: 0, owner: homePlayers[0] };
+    }
+
+    // IA Inteligente: Amigos pedem a bola
+    setInterval(() => {
+      if (!matchRunning || matchEnded) return;
+      homePlayers.forEach((p, idx) => {
+        if (idx !== controlledIdx && Math.random() < 0.2) {
+          p.callingPass = true;
+          setTimeout(() => p.callingPass = false, 1500);
+        }
+      });
+    }, 4000);
+
+    function triggerPassOrSwitch() {
+      const active = homePlayers[controlledIdx];
+      if (ball.owner === active) {
+        let targetIdx = homePlayers.findIndex((p, i) => i !== controlledIdx && p.callingPass);
+        if (targetIdx === -1) targetIdx = (controlledIdx + 1) % homePlayers.length;
+        const target = homePlayers[targetIdx];
+        const angle = Math.atan2(target.y - ball.y, target.x - ball.x);
+        ball.owner = null;
+        ball.vx = Math.cos(angle) * 14;
+        ball.vy = Math.sin(angle) * 14;
+        controlledIdx = targetIdx;
+      } else {
+        let closest = 0, minDist = 9999;
+        homePlayers.forEach((p, idx) => {
+          const d = Math.hypot(p.x - ball.x, p.y - ball.y);
+          if (d < minDist) { minDist = d; closest = idx; }
+        });
+        controlledIdx = closest;
+      }
+    }
+
+    function triggerShoot(power) {
+      const active = homePlayers[controlledIdx];
+      if (ball.owner !== active) return;
+      const targetY = 260 + (Math.random() * 90 - 45);
+      const angle = Math.atan2(targetY - ball.y, 1575 - ball.x);
+      const speed = 13 + power * 11;
+      ball.owner = null;
+      ball.vx = Math.cos(angle) * speed;
+      ball.vy = Math.sin(angle) * speed;
+    }
+
+    function triggerTackle() {
+      const active = homePlayers[controlledIdx];
+      if (ball.owner === active) return;
+      if (Math.hypot(ball.x - active.x, ball.y - active.y) < 50) {
+        if (Math.random() < 0.2) {
+          matchState = "FOUL";
+          showToast("🟨 Falta marcada pelo juiz!");
+          setTimeout(() => matchState = "PLAYING", 2000);
+        } else {
+          if (ball.owner) ball.owner.stun = 45;
+          ball.owner = active;
+          showToast("🦵 Desarme perfeito!");
+        }
+      }
+    }
+
+    setInterval(() => {
+      if (!matchRunning || matchEnded || goalBannerTimer > 0 || matchState !== "PLAYING") return;
+      matchSeconds++;
+      document.getElementById("match-clock").textContent = String(matchSeconds).padStart(2, "0") + "'";
+      if (matchSeconds >= 90) finishMatch();
+    }, 1000);
+
+    function finishMatch() {
+      matchEnded = true;
+      matchRunning = false;
+      let coinsEarned = scoreHome * 40;
+      let msg = "";
+
+      if (scoreHome > scoreAway) {
+        coinsEarned += 300;
+        state.career.wins++;
+        msg = `🏆 VITÓRIA (${scoreHome}x${scoreAway})! +${coinsEarned} Moedas!`;
+
+        const phaseObj = PHASES[state.career.phase];
+        if (state.career.wins >= phaseObj.targetWins) {
+          if (state.career.phase < PHASES.length - 1) {
+            state.career.phase++;
+            state.career.wins = 0;
+            if (state.career.phase === 1) {
+              state.career.club = "Santos FC (Base)";
+              triggerOverlay("✈️", "Contrato com o Santos FC!", "Você brilhou na favela, arrumou as malas e pegou um voo rumo à base profissional do Santos FC!");
+            } else if (state.career.phase === 2) {
+              state.career.club = "Real Madrid (Europa)";
+              triggerOverlay("✈️", "Transferência para a Europa!", "O olheiro europeu te contratou! Você embarcou em um jato executivo para jogar na elite europeia.");
+            }
+          }
+        }
+      } else {
+        coinsEarned += 60;
+        msg = `Fim de Jogo (${scoreHome}x${scoreAway}). +${coinsEarned} Moedas.`;
+      }
+
+      state.coins += coinsEarned;
+      saveState();
+      showToast(msg);
+    }
+
+    function gameLoop() {
+      updatePhysics();
+      drawPitch();
+      requestAnimationFrame(gameLoop);
+    }
+
+    function updatePhysics() {
+      if (!matchRunning || matchEnded || matchState !== "PLAYING") return;
+
+      if (goalBannerTimer > 0) {
+        goalBannerTimer--;
+        if (goalBannerTimer === 0) setupFormations();
+        return;
+      }
+
+      if (isChargingShot) shotPower = Math.min(1, shotPower + 0.04);
+
+      const active = homePlayers[controlledIdx];
+      if (active.stun > 0) {
+        active.stun--;
+      } else {
+        let mx = 0, my = 0;
+        if (keys["KeyW"] || keys["ArrowUp"]) my -= 1;
+        if (keys["KeyS"] || keys["ArrowDown"]) my += 1;
+        if (keys["KeyA"] || keys["ArrowLeft"]) mx -= 1;
+        if (keys["KeyD"] || keys["ArrowRight"]) mx += 1;
+
+        if (mx !== 0 || my !== 0) {
+          const len = Math.hypot(mx, my);
+          const speed = 4.0;
+          active.x = Math.max(35, Math.min(1565, active.x + (mx / len) * speed));
+          active.y = Math.max(35, Math.min(485, active.y + (my / len) * speed));
+        }
+      }
+
+      // Câmera dinâmica segue a bola suavemente
+      cameraX += (ball.x - 480 - cameraX) * 0.1;
+      cameraX = Math.max(0, Math.min(PITCH_WIDTH - 960, cameraX));
+
+      // IA companheiros
+      homePlayers.forEach((p, idx) => {
+        if (idx === controlledIdx) return;
+        const tx = ball.x > 800 ? p.homeX + 160 : p.homeX;
+        p.x += (tx - p.x) * 0.04;
+        p.y += (p.homeY - p.y) * 0.04;
+      });
+
+      // IA adversários
+      awayPlayers.forEach(ap => {
+        const ang = Math.atan2(ball.y - ap.y, ball.x - ap.x);
+        ap.x += Math.cos(ang) * 2.8;
+        ap.y += Math.sin(ang) * 2.8;
+      });
+
+      homeGK.y += (Math.max(205, Math.min(315, ball.y)) - homeGK.y) * 0.1;
+      awayGK.y += (Math.max(205, Math.min(315, ball.y)) - awayGK.y) * 0.1;
+      referee.x += (ball.x - referee.x) * 0.03;
+      referee.y += (ball.y - referee.y) * 0.03;
+
+      if (ball.owner) {
+        ball.x = ball.owner.x + (homePlayers.includes(ball.owner) ? 14 : -14);
+        ball.y = ball.owner.y;
+        ball.vx = 0; ball.vy = 0;
+      } else {
+        ball.x += ball.vx; ball.y += ball.vy;
+        ball.vx *= 0.96; ball.vy *= 0.96;
+
+        if (ball.y < 30 || ball.y > 490) { ball.vy *= -0.8; }
+        
+        // Gols (Entre Y = 205 e Y = 315)
+        if (ball.x > 1575 && ball.y > 205 && ball.y < 315) {
+          scoreHome++;
+          goalBannerText = `⚽ GOOOOL DO ${state.username.toUpperCase()}!`;
+          goalBannerTimer = 85;
+          document.getElementById("score-home").textContent = scoreHome;
+          return;
+        }
+        if (ball.x < 25 && ball.y > 205 && ball.y < 315) {
+          scoreAway++;
+          goalBannerText = "⚽ GOL DO ADVERSÁRIO!";
+          goalBannerTimer = 85;
+          document.getElementById("score-away").textContent = scoreAway;
+          return;
+        }
+      }
+
+      homePlayers.forEach((p, idx) => {
+        if (Math.hypot(ball.x - p.x, ball.y - p.y) < 22 && !ball.owner) {
+          ball.owner = p;
+          controlledIdx = idx;
+        }
+      });
+      awayPlayers.forEach(ap => {
+        if (Math.hypot(ball.x - ap.x, ball.y - ap.y) < 22 && !ball.owner && Math.random() < 0.1) {
+          ball.owner = ap;
+        }
+      });
+    }
+
+    function drawPitch() {
+      ctx.save();
+      ctx.translate(-cameraX, 0);
+
+      // Gramado
+      ctx.fillStyle = "#166534";
+      ctx.fillRect(0, 0, PITCH_WIDTH, PITCH_HEIGHT);
+      ctx.fillStyle = "#15803d";
+      for (let i = 0; i < PITCH_WIDTH; i += 100) ctx.fillRect(i, 0, 50, PITCH_HEIGHT);
+
+      // Linhas do campo
+      ctx.strokeStyle = "rgba(255,255,255,0.85)";
+      ctx.lineWidth = 3;
+      ctx.strokeRect(25, 25, PITCH_WIDTH - 50, PITCH_HEIGHT - 50);
+
+      ctx.beginPath();
+      ctx.moveTo(PITCH_WIDTH / 2, 25); ctx.lineTo(PITCH_WIDTH / 2, PITCH_HEIGHT - 25); ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(PITCH_WIDTH / 2, PITCH_HEIGHT / 2, 70, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.strokeRect(25, 160, 110, 200);
+      ctx.strokeRect(PITCH_WIDTH - 135, 160, 110, 200);
+
+      // Redes dos Gols
+      ctx.fillStyle = "rgba(255,255,255,0.4)";
+      ctx.fillRect(8, 205, 18, 110);
+      ctx.fillRect(PITCH_WIDTH - 26, 205, 18, 110);
+
+      // Técnico, bandeirinhas e árbitro
+      drawDetailedPlayer(coach.x + cameraX * 0.2, coach.y, "#1e293b", "#333", "Técnico", false, "#fff");
+      drawDetailedPlayer(linesmanTop.x, linesmanTop.y, "#fbbf24", "#000", "Juiz Linha", false, "#fff");
+      drawDetailedPlayer(linesmanBot.x, linesmanBot.y, "#fbbf24", "#000", "Juiz Linha", false, "#fff");
+      drawDetailedPlayer(referee.x, referee.y, "#000000", "#eab308", "Árbitro", false, "#fff");
+
+      // Goleiros
+      drawDetailedPlayer(homeGK.x, homeGK.y, "#facc15", "#451a03", "GK", false, state.bootColor);
+      drawDetailedPlayer(awayGK.x, awayGK.y, "#a855f7", "#111", "GK", false, "#fff");
+
+      // 12 Jogadores do Time Casa (1 Goleiro + 11 de linha)
+      homePlayers.forEach((p, idx) => {
+        const namePart = p.data.name.split(" ")[0];
+        drawDetailedPlayer(p.x, p.y, state.teamColor, p.data.hairColor || "#333", namePart, idx === controlledIdx, state.bootColor);
+        if (p.callingPass) {
+          ctx.fillStyle = "#f59e0b";
+          ctx.font = "bold 11px system-ui";
+          ctx.fillText("Passa! 🗣️", p.x, p.y - 32);
+        }
+      });
+
+      // 12 Jogadores do Time Rival (1 Goleiro + 11 de linha)
+      awayPlayers.forEach(ap => {
+        drawDetailedPlayer(ap.x, ap.y, ap.shirt, ap.hair, ap.name, false, "#fff");
+      });
+
+      if (isChargingShot) {
+        const active = homePlayers[controlledIdx];
+        ctx.fillStyle = "#000";
+        ctx.fillRect(active.x - 22, active.y - 38, 44, 7);
+        ctx.fillStyle = shotPower > 0.8 ? "#ef4444" : "#22c55e";
+        ctx.fillRect(active.x - 22, active.y - 38, 44 * shotPower, 7);
+      }
+
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, 8, 0, Math.PI * 2);
+      ctx.fillStyle = "#ffffff";
+      ctx.fill();
+      ctx.strokeStyle = "#000";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      if (goalBannerTimer > 0) {
+        ctx.fillStyle = "rgba(5, 8, 17, 0.9)";
+        ctx.fillRect(cameraX, 180, 960, 120);
+        ctx.fillStyle = "#22c55e";
+        ctx.font = "900 32px system-ui";
+        ctx.textAlign = "center";
+        ctx.fillText(goalBannerText, cameraX + 480, 250);
+      }
+
+      ctx.restore();
+    }
+
+    function drawDetailedPlayer(x, y, shirtColor, hairColor, label, isSelected = false, bootColor = "#fff") {
+      if (isSelected) {
+        ctx.beginPath();
+        ctx.moveTo(x, y - 30);
+        ctx.lineTo(x - 6, y - 38);
+        ctx.lineTo(x + 6, y - 38);
+        ctx.closePath();
+        ctx.fillStyle = "#22c55e";
+        ctx.fill();
+      }
+
+      ctx.fillStyle = hairColor;
+      ctx.fillRect(x - 5, y - 16, 10, 5);
+      ctx.fillStyle = "#fbcfe8";
+      ctx.fillRect(x - 4, y - 11, 8, 7);
+      ctx.fillStyle = shirtColor;
+      ctx.fillRect(x - 7, y - 4, 14, 12);
+      ctx.fillStyle = "#1e293b";
+      ctx.fillRect(x - 6, y + 8, 5, 5);
+      ctx.fillRect(x + 1, y + 8, 5, 5);
+      ctx.fillStyle = bootColor;
+      ctx.fillRect(x - 6, y + 13, 4, 3);
+      ctx.fillRect(x + 2, y + 13, 4, 3);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 9px system-ui";
+      ctx.textAlign = "center";
+      ctx.fillText(label, x, y + 28);
+    }
+
+    updateHUD();
+    gameLoop();
+  </script>
+</body>
+</html>
